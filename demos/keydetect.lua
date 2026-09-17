@@ -22,25 +22,11 @@ b.g2 = {"b", condition = {keydown("-"), logic = "not"}}
 -- This is as close as we can get to *active* keyboard bindings
 b.g3 = {type = "sequence", 50, {"c", condition = keydown("-")}, loop = -1, play = "toggle"} --[[@as AssignSequence]]
 
-
 -- A more sophisticated example of the above macro that avoids button spam:
--- If the minus key is pressed and the "d_p" flag is not already set, the "d" key is pressed and the "d_p" flag is set.
--- If the flat IS set, and the minus key is not pressed (aka only when key is released), the flag is set back to false.
+-- If the minus key is pressed and the "d_p" flag is not already set, the "d" key is pressed.
+-- The second macro toggles the flag if it is either set or minus is pressed, but not both, implicitly detecting a key-up event.
 -- This results in in "d" being pressed only once.
-b.g4 = {
-   type = "sequence",
-   50,
-   {
-      {
-         "d",
-         {type = "flag", {"d_p", true}},
-         condition = {keydown("-"), "*d_p", logic = "and"}
-      },
-      {
-         {type = "flag", {"d_p", false}},
-         condition = {{keydown("-"), logic = "not"}, ".d_p", l = "and"}
-      }
-   },
-   loop = -1,
-   play = "toggle"
-} --[[@as AssignSequence]]
+b.g4 = { type = "sequence",50,{
+      {"d", condition = {'*d_p', keydown("-"), logic = "and"}} --[[@as AssignKey]],
+      {type = "flag", "d_p", toggle = true, condition = {".d_p", keydown("-"), logic = "xor"}} --[[@as AssignFlag]]
+   },loop = -1,play = "toggle"} --[[@as AssignSequence]]
