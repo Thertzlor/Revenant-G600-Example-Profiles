@@ -46,7 +46,7 @@ b.mode_2.g2 = {
       "~/l", 500, -- shift + left means the next loop will override the letter we just type. We then wait 500ms, so we have enough time between loops.
       type = "sequence", loop = -1, play = "hold" -- the sequence plays as long as the button is held, looping indefinitely.
    },
-   -- Several things happen when we release the key: 
+   -- Several things happen when we release the key:
    -- we press "right", so the next letter is inserted in the next position.
    -- we reset our letter cycle to the first position and set the "caps" flag to false, since the input is complete.
    {"right", {type = "cyclecontrol", "c2", 1}, {type = "flag", {"caps", false}}, direction = "up"},
@@ -77,7 +77,8 @@ b.mode_2.g12 = {type = "flag", {"caps", true}} -- set a flag for the next letter
 
 
 
--- The final implementation utilizes cycle macros directly and involves a lot more state logic:
+-- The final implementation utilizes cycle macros directly and involves a lot more state logic.
+---@type AssignGroup|[AssignKey,AssignFlag,AssignKeyBuffer,AssignCycle,AssignSequence|[number,AssignFlag]]
 b.mode_3.g2 = {
    -- We press backspace when the last button pressed was this button and when the sequence s2 is running.
    -- We will later start this sequence ourselves, it acts as the timing window in which we can correct our input.
@@ -87,14 +88,14 @@ b.mode_3.g2 = {
    -- If the caps flag is still set, we now buffer the shift key.
    {type = "keybuffer", "~", condition = ".caps", priority = 2},
    -- This cycle presses the actual key. It resets after 250ms or when another button is pressed.
-   {type = "cycle", "a", "b", "c", cancel = -250} --[[@as AssignCycle]],
+   {type = "cycle", "a", "b", "c", cancel = -250},
    -- This sequence acts as a timer. After a 250ms delay it sets the caps flag to false since the capitalized letter has been typed.
    -- Since the "stack" property is set to 0, the sequence will abort and restart if the button is pressed again within those 250ms.
-   {250, {type = "flag", {"caps", false}}, type = "sequence", name = "s2", stack = 0} --[[@as AssignSequence]],
-   type = "group",
-   name = "multigroup"
+   {250, {type = "flag", {"caps", false}}, type = "sequence", name = "s2", stack = 0},
+   type = "group", name = "multigroup"
 }
 -- The rest is instances:
+---@cast b { mode_3: table<string,AssignInstance> | { g11:string,g12:AssignFlag } }
 b.mode_3.g4 = {
    type = "instance", "multigroup",
    update = {{"d", "e", "f"}, selector = {4, 1}, method = "listreplace"},
@@ -143,6 +144,7 @@ b.mode_3.g12 = {type = "flag", {"caps", true}} -- set a flag for the next letter
 
 
 -- ...Numbers are always on G-Shift.
+---@cast b {shift_1: table<string,string>}
 b.shift_1.g1 = "1"
 b.shift_1.g2 = "2"
 b.shift_1.g3 = "3"
