@@ -10,19 +10,20 @@ a.config = {
    debugOutput = true,
    showCompiled = false,
    historyDepth = 4, -- We limit the size of the button history to the length of our lock combination.
-   historyTimeout = 2000
+   historyTimeout = 2000 -- Wait longer than 2 seconds between inputs and your unlock attempt will fail.
 }
-
+---@type [AssignKey,AssignAlterHistory]
 b.g10 = { --Self explanatory. The macro only outputs its text when the 4 keys in the condition have been pressed in this order.
    {"You cracked the static code!", condition = "^g8-g5-g1-g3"},
-   {type = "alterhistory", -1} --Wiping the button history after each submission, to prevent brute forcing.
+   {type = "alterhistory", -1} --Wiping the button history after each "submission", to prevent brute forcing.
 }
 
+---@type [AssignKey,AssignAlterHistory]
 b.g11 = {
    {
       "You cracked the randomized code!",
       name = "randomLock", -- For this macro we generate a condition option with four random buttons as our combination.
-      process = function(c, o) -- We also log the combination, so you can look at the logitech console or debug events to "cheat".
+      process = function(c, o) -- We also log the combination, so you can look at the logitech console or debug event viewer to "cheat".
          return c, rv.tbl:intersect(o, {condition = rv:pipe(string.gsub("^g0-g0-g0-g0", '0', function() return math.random(9) end), "(random combination)")})
       end
    },
