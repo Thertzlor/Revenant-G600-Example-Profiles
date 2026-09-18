@@ -7,15 +7,20 @@ a.config = {
    description = "several implementations of multi-tap.",
    multiClickTime = 250,
    showCompiled = false,
-   --  clearLog = true,
    defaultMode = 0,
    actionDelay = 1,
    mouseModeCount = 3,
    globalModes = {"multi click", "hold cycle", "manual cycle"}
 }
 
+--[[=============================================================
 
-b.m3 = {type = "mode", 0} --- middle mouse button cycles through the trhee .
+   This is a demonstration profile for Revenant containing three different implementations fo
+
+
+--=============================================================]] --
+
+b.m3 = {type = "mode", 0} --- the middle mouse button cycles through the trhee modes of multi-tap.
 
 -- The compact and naive approach: cycling multiclick keys.
 -- Good for apps that don't delete with backspace, but without a way to "preview" keys.
@@ -43,7 +48,7 @@ b.mode_2.g2 = {
    },
    -- Several things happen when we release the key: 
    -- we press "right", so the next letter is inserted in the next position.
-   -- we reset our letter cycle to the first position and set the "caps" flag to false, since the input is complete
+   -- we reset our letter cycle to the first position and set the "caps" flag to false, since the input is complete.
    {"right", {type = "cyclecontrol", "c2", 1}, {type = "flag", {"caps", false}}, direction = "up"},
    name = "multihold"
 }
@@ -72,67 +77,64 @@ b.mode_2.g12 = {type = "flag", {"caps", true}} -- set a flag for the next letter
 
 
 
+-- The final implementation utilizes cycle macros directly and involves a lot more state logic:
 b.mode_3.g2 = {
+   -- We press backspace when the last button pressed was this button and when the sequence s2 is running.
+   -- We will later start this sequence ourselves, it acts as the timing window in which we can correct our input.
    {type = "key", "backspace", condition = {"^g2", ":s2", l = "and"}, priority = 4},
+   -- We remove the caps flag when the previous button was not this one or the g12. This ensures that only one letter will be capitalized.
    {type = "flag", {"caps", false}, condition = {"|g2", "|g12", l = "and"}, priority = 3},
+   -- If the caps flag is still set, we now buffer the shift key.
    {type = "keybuffer", "~", condition = ".caps", priority = 2},
+   -- This cycle presses the actual key. It resets after 250ms or when another button is pressed.
    {type = "cycle", "a", "b", "c", cancel = -250} --[[@as AssignCycle]],
+   -- This sequence acts as a timer. After a 250ms delay it sets the caps flag to false since the capitalized letter has been typed.
+   -- Since the "stack" property is set to 0, the sequence will abort and restart if the button is pressed again within those 250ms.
    {250, {type = "flag", {"caps", false}}, type = "sequence", name = "s2", stack = 0} --[[@as AssignSequence]],
    type = "group",
    name = "multigroup"
 }
--- For the rest of the buttons we either simply copy and paste the assignment...
-b.mode_3.g3 = {
-   {type = "key", "backspace", condition = {"^g3", ":s3", l = "and"}, priority = 4},
-   {type = "flag", {"caps", false}, condition = {"|g3", "|g12", l = "and"}, priority = 3},
-   {type = "keybuffer", "~", condition = ".caps", priority = 2},
-   {type = "cycle", "d", "e", "f", cancel = -250} --[[@as AssignCycle]],
-   {250, {{type = "flag", {"caps", false}}}, type = "sequence", name = "s3", stack = 0} --[[@as AssignSequence]],
-   type = "group"
+-- The rest is instances:
+b.mode_3.g4 = {
+   type = "instance", "multigroup",
+   update = {{"d", "e", "f"}, selector = {4, 1}, method = "listreplace"},
+   substitute = {["^g2"] = "^g3", [":s2"] = ":s3", ["|g2"] = "|g3", ["s2"] = "s3"}
 }
--- Or, for a more advanced approach, use modified macro instances for less repetition.
--- Obviously we could use pure lua functions with loops too, I'm just keeping it within the templating language.
 b.mode_3.g4 = {
    type = "instance", "multigroup",
    update = {{"g", "h", "i"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g4", [":s2"] = ":s4", ["|g2"] = "|g4", ["s2"] = "s4"}
-} --[[@as AssignInstance]]
-
+}
 b.mode_3.g5 = {
    type = "instance", "multigroup",
    update = {{"j", "k", "l"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g5", [":s2"] = ":s5", ["|g2"] = "|g5", ["s2"] = "s5"}
-} --[[@as AssignInstance]]
-
+}
 b.mode_3.g6 = {
    type = "instance", "multigroup",
    update = {{"m", "n", "o"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g6", [":s2"] = ":s6", ["|g2"] = "|g6", ["s2"] = "s6"}
-} --[[@as AssignInstance]]
-
+}
 b.mode_3.g7 = {
    type = "instance", "multigroup",
    update = {{"p", "q", "r", "s"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g7", [":s2"] = ":s7", ["|g2"] = "|g7", ["s2"] = "s7"}
-} --[[@as AssignInstance]]
-
+}
 b.mode_3.g8 = {
    type = "instance", "multigroup",
    update = {{"t", "u", "v",}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g8", [":s2"] = ":s8", ["|g2"] = "|g8", ["s2"] = "s8"}
-} --[[@as AssignInstance]]
-
+}
 b.mode_3.g9 = {
    type = "instance", "multigroup",
    update = {{"w", "x", "y", "z"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g9", [":s2"] = ":s9", ["|g2"] = "|g9", ["s2"] = "s9"}
-} --[[@as AssignInstance]]
-
+}
 b.mode_3.g1 = {
    type = "instance", "multigroup",
    update = {{".", ",", "!", "?"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g1", [":s2"] = ":s1", ["|g2"] = "|g1", ["s2"] = "s1"}
-} --[[@as AssignInstance]]
+}
 
 b.mode_3.g10 = {"*"}
 b.mode_3.g11 = " "
