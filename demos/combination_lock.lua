@@ -1,6 +1,14 @@
 ---@type ProfileTemplate, Revenant
 local a, rv = ...
 local b = a.key
+
+--[[=============================================================
+
+   This is a demonstration profile for Revenant containing two combination lock using the G600 thumbpad as a keypad.
+   The combination of the second lock is randomly generated when the profile loads.
+
+--=============================================================]] --
+
 -- We require developerMode for the math.random calls
 rv.utils.developerMode()
 

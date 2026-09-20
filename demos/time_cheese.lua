@@ -3,6 +3,12 @@
 local a = ...
 local b = a.key
 
+--[[=============================================================
+
+   This is a demonstration profile for Revenant containing a cheese recommendation system using a global timer and sequence-check conditions.
+
+--=============================================================]] --
+
 a.config = {
    externalConfigs = '../config/defaultConfig',
    description = "Cheesy mouse",
@@ -11,15 +17,17 @@ a.config = {
    fragileThreads = false
 }
 
+---@type AssignSequence|AssignSequence[]
 a.start = {
    -- Every 2-4 seconds a different subsequence runs (3000ms base delay with 2000ms of random variance)
    {3000, "", name = "c1", type = "sequence", actionVariance = 2000},
    {3000, "", name = "c2", type = "sequence", actionVariance = 2000},
    {3000, "", name = "c3", type = "sequence", actionVariance = 2000},
-   type = "sequence",loop = -1,name = "big cheese"
-} --[[@as AssignSequence]]
+   type = "sequence", loop = -1, name = "big cheese"
+}
 
 -- The last button on the thumbpad pauses and unpauses the "big cheese" sequence, freezing the current selection.
+---@type AssignControl
 b.g12 = {type = "macrocontrol", "big cheese", "toggle"} --[[@as AssignControl]]
 
 -- We define three custom groups (the names after the "_c" can be freely chosen).

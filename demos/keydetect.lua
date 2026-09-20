@@ -2,6 +2,13 @@
 local a, rv = ...
 local b = a.key
 
+--[[=============================================================
+
+   This is a demonstration profile for Revenant demonstrating how to dynamically read information from external files and using it to control macro behavior.
+   You need to run the "keysdown.ahk" script for the "keysdown.lua" file to get filled and updated.
+
+--=============================================================]] --
+
 a.config = {externalConfigs = '../config/defaultConfig', description = "Non-modifier key detection"}
 
 -- This function imports the file containing the table of pressed keys.

@@ -2,6 +2,12 @@
 local a = ...
 local b = a.key
 
+--[[=============================================================
+
+   This is a demonstration profile for Revenant containing three different implementations of a Multi-tap text entry system for the thumbpad of a G600.
+
+--=============================================================]] --
+
 a.config = {
    externalConfigs = '../config/defaultConfig',
    description = "several implementations of multi-tap.",
@@ -13,15 +19,17 @@ a.config = {
    globalModes = {"multi click", "hold cycle", "manual cycle"}
 }
 
---[[=============================================================
-
-   This is a demonstration profile for Revenant containing three different implementations fo
-
-
---=============================================================]] --
-
 b.m3 = {type = "mode", 0} --- the middle mouse button cycles through the trhee modes of multi-tap.
 
+-- This group defines the keys that are the same in every mode.
+-- g10 is always backspace, g11 is always space.
+-- g12 is also always capitalization but this requires different implementations.
+b.mode_0 = {
+   g10 = "backspace",
+   g11 = " "
+}
+
+-- Starting with mode 1
 -- The compact and naive approach: cycling multiclick keys.
 -- Good for apps that don't delete with backspace, but without a way to "preview" keys.
 b.mode_1.g2 = {type = "multiclick", "a", "b", "c", cyclical = true}
@@ -33,18 +41,16 @@ b.mode_1.g7 = {type = "multiclick", "p", "q", "r", "s", cyclical = true}
 b.mode_1.g8 = {type = "multiclick", "t", "u", "v", cyclical = true}
 b.mode_1.g9 = {type = "multiclick", "w", "x", "y", "z", cyclical = true}
 b.mode_1.g1 = {type = "multiclick", ".", ",", "!", "?", cyclical = true}
-b.mode_1.g10 = {"*"}
-b.mode_1.g11 = " "
 b.mode_1.g12 = {type = "keybuffer", "~"} -- Capitalization simply buffers a shift modifier.
 
 
 --- our second approach involves cycling through the letters while we hold down the key and "finalizing" our input when we release it.
 b.mode_2.g2 = {
-   {
+   {  type = "sequence",
       {type = "keybuffer", "~", condition = ".caps"}, -- we buffer shift for capitalization if the "caps" flag is set.
       {"a", "b", "c", type = "cycle", cancel = 1, name = "c2"}, --The actual cycling logic, note that we reset the cycle when any other key is pressed.
       "~/l", 500, -- shift + left means the next loop will override the letter we just type. We then wait 500ms, so we have enough time between loops.
-      type = "sequence", loop = -1, play = "hold" -- the sequence plays as long as the button is held, looping indefinitely.
+      loop = -1, play = "hold" -- the sequence plays as long as the button is held, looping indefinitely.
    },
    -- Several things happen when we release the key:
    -- we press "right", so the next letter is inserted in the next position.
@@ -53,12 +59,12 @@ b.mode_2.g2 = {
    name = "multihold"
 }
 
--- For the rest of the buttons we either simply copy and paste the assignment with slight alterations...
+-- We can then copy the same logic on the remaining buttons changing the letters and names.
 b.mode_2.g3 = {
-   {{type = "keybuffer", "~", condition = ".caps"},
-   {"d", "e", "f", type = "cycle", cancel = 1, name = "c3"},"~/l",500,
-   type = "sequence",loop = -1,play = "hold"},
-   {{"/r", type = "key"}, {type = "cyclecontrol", "c3", 1}, {type = "flag", {"caps", false}}, direction = "up"},
+   {type = "sequence", {type = "keybuffer", "~", condition = ".caps"},
+   {"d", "e", "f", type = "cycle", cancel = 1, name = "c3"},
+   "~/l",500, loop = -1,play = "hold"},
+   {"right", {type = "cyclecontrol", "c3", 1}, {type = "flag", {"caps", false}}, direction = "up"}
 }
 
 -- Or, for a more advanced approach, use modified macro instances for less repetition.
@@ -70,11 +76,7 @@ b.mode_2.g7 = {type = "instance", "multihold", substitute = {c2 = "c7"}, update 
 b.mode_2.g8 = {type = "instance", "multihold", substitute = {c2 = "c8"}, update = {{"t", "u", "v"}, selector = {1, 2, 1}, method = "listreplace"}}
 b.mode_2.g9 = {type = "instance", "multihold", substitute = {c2 = "c9"}, update = {{"w", "x", "y", "z"}, selector = {1, 2, 1}, method = "listreplace"}}
 b.mode_2.g1 = {type = "instance", "multihold", substitute = {c2 = "c1"}, update = {{".", ",", "!", "?"}, selector = {1, 2, 1}, method = "listreplace"}}
-
-b.mode_2.g10 = {"*"}
-b.mode_2.g11 = " "
 b.mode_2.g12 = {type = "flag", {"caps", true}} -- set a flag for the next letter to be capitalized.
-
 
 
 -- The final implementation utilizes cycle macros directly and involves a lot more state logic.
@@ -95,8 +97,8 @@ b.mode_3.g2 = {
    type = "group", name = "multigroup"
 }
 -- The rest is instances:
----@cast b { mode_3: table<string,AssignInstance> | { g11:string,g12:AssignFlag } }
-b.mode_3.g4 = {
+---@cast b { mode_3: table<string,AssignInstance> | {g12:AssignFlag } }
+b.mode_3.g3 = {
    type = "instance", "multigroup",
    update = {{"d", "e", "f"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g3", [":s2"] = ":s3", ["|g2"] = "|g3", ["s2"] = "s3"}
@@ -127,7 +129,7 @@ b.mode_3.g8 = {
    substitute = {["^g2"] = "^g8", [":s2"] = ":s8", ["|g2"] = "|g8", ["s2"] = "s8"}
 }
 b.mode_3.g9 = {
-   type = "instance", "multigroup",
+type = "instance", "multigroup",
    update = {{"w", "x", "y", "z"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g9", [":s2"] = ":s9", ["|g2"] = "|g9", ["s2"] = "s9"}
 }
@@ -136,12 +138,7 @@ b.mode_3.g1 = {
    update = {{".", ",", "!", "?"}, selector = {4, 1}, method = "listreplace"},
    substitute = {["^g2"] = "^g1", [":s2"] = ":s1", ["|g2"] = "|g1", ["s2"] = "s1"}
 }
-
-b.mode_3.g10 = {"*"}
-b.mode_3.g11 = " "
 b.mode_3.g12 = {type = "flag", {"caps", true}} -- set a flag for the next letter to be capitalized.
-
-
 
 -- ...Numbers are always on G-Shift.
 ---@cast b {shift_1: table<string,string>}
