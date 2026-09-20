@@ -16,7 +16,10 @@ a.library = {
    back_workshop = {t = "i", "back", sub = {_val = "/ebo"}},
 }
 
-b.m4 = " "
+b.m4 = " " -- pause/unpause
+
+b.m7 = "f" -- toggle water depth
+b.m8 = "r" -- toggle slopes
 
 -- The alter history macro makes Revenant forget that m3 was ever pressed.
 -- This way middle mouse does not interrupt key sequences or reset cycles when building.
