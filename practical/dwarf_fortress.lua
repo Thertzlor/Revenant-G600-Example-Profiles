@@ -7,6 +7,8 @@ a.config = {externalConfigs = "../config/defaultConfig", description = "Dwarf Fo
 -- The library contains some utility functiions that we will often use for menuing.
 a.library = {
    ---@type AssignAlterHistory
+   ignore = {t = "ah", 0, refresh = true},
+   ---@type AssignAlterHistory
    wiper = {t = "ah", g = 2},
    ---@type AssignGroup|[AssignAlterHistory,AssignKey]
    back = {{t = "ah", 1, refresh = true}, {"/e", g = 1, inject = "wiper"}, {"_val", g = 0}, template = true},
@@ -16,15 +18,18 @@ a.library = {
    back_workshop = {t = "i", "back", sub = {_val = "/ebo"}},
 }
 
-b.m4 = " " -- pause/unpause
+b.m4 = " "
+
+b.m5 = {type = "cycle", "B", "b", inject = "ignore"} -- Switch between draw and rectangle mode
+
 
 b.m7 = "f" -- toggle water depth
 b.m8 = "r" -- toggle slopes
 
 -- The alter history macro makes Revenant forget that m3 was ever pressed.
 -- This way middle mouse does not interrupt key sequences or reset cycles when building.
----@type [AssignKey, AssignAlterHistory]
-b.m3 = {"/3", {t = "ah", 0, refresh = true, dir = "up"}}
+---@type AssignKey
+b.m3 = {"/3", inject = "ignore"}
 
 
 -- This key cycles through build modes, mining, channeling stairs etc.
