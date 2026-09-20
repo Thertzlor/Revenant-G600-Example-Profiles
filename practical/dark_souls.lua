@@ -1,4 +1,5 @@
-local a = ... ---@type ProfileTemplate
+---@type ProfileTemplate, Revenant
+local a = ...
 local b = a.key
 
 a.config = {extends = "_default_game_profile", description = "Dark Souls"}

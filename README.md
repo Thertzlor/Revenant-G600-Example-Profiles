@@ -57,9 +57,9 @@ So... mice like cheese, so turn the thumbpad of your G600 mouse into a cheese bo
 
 I was mostly using cheese names that I am personally aware of, so apologies that the selection might have ended up a bit eurocentric (in my defence, I was also trying to avoid word with nonstandard letters and accents for the sake of compatibility).
 
-
 # Practical
-A lot of this is just personal preference
+Everything in this section is a profile that I have actually used.  
+Nedless to say, a lot of the bindings and conventions you'll see is just personal preference, as I tend to keep the same functionality on the same button across different programs.
 
 ## Games
 
@@ -77,14 +77,17 @@ This is a minimal profile with only 5 lines of actual assignments, the rest is i
 There's nothing here that can't already be done in base LGS, it just shows how fast you can whip up a fully functional profile with Revenant's profile extension if the game doesn't deviate from the norm.
 
 ### *Doom (2016)* and *Dark Souls*
-These are two examples of profiles that change up the default game profile for 
+These are two examples of profiles for popular games that alter the gaming defaults more considerably.  
+Complexity wise, they are on the lower end of average, some combinations, some G-shift states, but nothing crazy, but many profiles end up being around this size.
 
-I'm not good at either of these games, but I've never understood why people were complaining about the PC controls for Dark Souls before I remembered those people probably aren't playing with a 20 button mouse.
+The point being, that a 30 line text file is easier to manage than clicking your way through the LGS command UI.  
+For example since in LGS mouse actions don't count as simple keystrokes you would already have to bust out the macro recorder for the "kick/alt attack" macro in the Dark Souls profile.
 
-But since in LGS mouse actions don't count as simple keystrokes you would already have to bust out the macro recorder for the "kick/alt attack" macro in the Dark Souls profile.
+I'm not exactly good at either of these games, but I would certainly be worse without my G600. I've never understood why people were complaining about the PC controls for Dark Souls before I remembered those people probably aren't playing with a 20 button mouse.
 
 ### Just Cause 2
-With this profile we get into some of the more advanced techniques that let you set
+With this profile we get into some of the more advanced techniques that are only possible with lua.  
+This is no longer just about re-binding existing controls, but about adding ways to control the game that didn't exist originally.
 #### Highlights and stuff you couldn't do with the GUI:
 * [Key cycling](https://github.com/Thertzlor/Revenant/wiki/Cycle-Macro) in general, e.g. the dual wield on *g-shift + g1*.
 * *g2* and *g4* both implement a simple double-tap toggle logic (for sprint and crouch respectively) using timed cycle buttons, that works like this (using the sprinting with *shift* as an example):  
@@ -94,9 +97,9 @@ With this profile we get into some of the more advanced techniques that let you 
     * Simply pressing the button again untoggles shift, as it's just the normal key which it includes key-up.
     * *Technically* this method sends a superflous event (shift-down, shift-up, then again shift down) but this particular game doesn't care about that.
 
-
 ### Shadow of Mordor
-
+This game has some rather convoluted PC controls, not just plenty of stuff to fill the thumbpad with but also lots of actions that can be made more convenient with macros and switching between keybinds depending on context.  
+There's quite a lot to go over here.
 #### Highlights and stuff you couldn't do with the GUI:
 * middle click is set to a lot of context sensitive functions.
   * Normally, it just triggers the regular mouse 3 event `/3`.
@@ -137,8 +140,9 @@ After pressing it, the thumbpad button select menu items by position, and this p
 ## Other Apps
 
 ### Browser Profile
-A profile covering pretty much all the usual navigation and tab management functions you find in a browser.
+A profile covering pretty much all the usual navigation and tab management functions you find in a browser.  
 I use this as my daily driver for Vivaldi and it should work with just about any chromium based browser as well.
+
 Overall, it doesn't have many super wild features.
 
 #### Highlights and stuff you couldn't do with the GUI:
