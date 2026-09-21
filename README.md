@@ -41,7 +41,7 @@ There are two locks implemented:
 
 ## Keyboard key detection via Autothotkey
 A demonstration of how we can use the capability to dynamically load .lua files to react to events that LGS cannot detect normally.
-* This profile requires running a separate .ahk script (not an actual keylogger, don't worry) which logs the currently pressed keys into a lua table.
+* This profile requires running a separate .ahk script ([not an actual keylogger, don't worry](https://github.com/Thertzlor/Revenant-G600-Example-Profiles/blob/main/demos/keydetect_ahk/keysdown.ahk)) which logs the currently pressed keys into a lua table.
   * Simply run `keysdown.ahk` in the .ahk subfolder before starting the profile.  
   (for real world applications this can be automated using an External Macro in the start binding pointing a shortcut command in LGS)
 * The script can then read that table on demand and use it for [macro conditions]().
